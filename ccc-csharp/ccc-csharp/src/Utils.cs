@@ -10,12 +10,10 @@ namespace CCC
 
         public class Input
         {
-            public List<Account> Accounts;
             public List<Transaction> Transactions;
 
-            public Input(List<Account> accounts, List<Transaction> transactions)
+            public Input(List<Transaction> transactions)
             {
-                Accounts = accounts;
                 Transactions = transactions;
             }
         }
@@ -25,52 +23,58 @@ namespace CCC
             int i = 0;
             string[] totalLines = File.ReadAllLines(path);
 
-            int numAccounts = int.Parse(totalLines[i]);
-            i++;
-
-            // read accounts
-            var accounts = new List<Account>();
-            Console.WriteLine($"Reading {numAccounts} transactions ...");
-            for (int j = i; j < i + numAccounts; j++)
-            {
-                string line = totalLines[j];
-                string[] splitted = line.Split(' ');
-
-                string personName = splitted[0];
-                string accountNumber = splitted[1];
-                int actualAccountBalance = int.Parse(splitted[2]);
-                int overdraftLimit = int.Parse(splitted[3]);
-
-                accounts.Add(new Account(personName, accountNumber, actualAccountBalance, overdraftLimit));
-            }
-
-            i += numAccounts;
-
             int numTransactions = int.Parse(totalLines[i]);
             i++;
-
 
             // read transactions
             var transactions = new List<Transaction>();
             Console.WriteLine($"Reading {numTransactions} transactions ...");
             for (int j = i; j < i + numTransactions; j++)
             {
+                var inputElements = new List<InputElement>();
+                var outputElements = new List<OutputElement>();
+                    
                 string line = totalLines[j];
                 string[] splitted = line.Split(' ');
 
-                string accountNumberFrom = splitted[0];
-                string accountNumberTo = splitted[1];
-                int amount = int.Parse(splitted[2]);
-                long transactionSubmitTime = long.Parse(splitted[3]);
+                string transactionId = splitted[0];
+                int numInputs = int.Parse(splitted[1]);
+                int ii = 2;
 
-                Account personNameFromAcc = accounts.Find(l => l.AccountNumber == accountNumberFrom);
-                Account personNameToAcc = accounts.Find(l => l.AccountNumber == accountNumberTo);
+                if (transactionId == "0x00000095")
+                {
+                    int x = 6;
+                }
 
-                transactions.Add(new Transaction(personNameFromAcc, personNameToAcc,
-                    amount, transactionSubmitTime));
+
+                for (int jj = ii; jj < ii + numInputs * 3; jj = jj + 3)
+                {
+                    string inputId = splitted[jj];
+                    string inputOwner = splitted[jj + 1];
+                    int inputAmount = int.Parse(splitted[jj + 2]);
+                    
+                    inputElements.Add(new InputElement(inputId, inputOwner, inputAmount));
+                }
+                ii += numInputs * 3;
+                
+                int numOutputs = int.Parse(splitted[ii]);
+                ii++;
+                
+                for (int jj = ii; jj < ii + numOutputs * 2; jj = jj + 2)
+                {
+                    string outputOwner = splitted[jj];
+                    int outputAmount = int.Parse(splitted[jj + 1]);
+                    outputElements.Add(new OutputElement(outputOwner, outputAmount));
+                }
+                ii += numOutputs * 2;
+                
+                long transactionSubmitTime = long.Parse(splitted[ii]);
+
+                transactions.Add(new Transaction(transactionId, transactionSubmitTime, inputElements, outputElements, line));
             }
 
-            Singleton = new Input(accounts, transactions);
+            Blockchain.AllTransactions = transactions;
+            Singleton = new Input(transactions);
             return Singleton;
         }
     }
