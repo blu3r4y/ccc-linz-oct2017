@@ -1,0 +1,4 @@
+.gitattributes export-ignore
+.gitignore export-ignore
+archive.ps1 export-ignore
+/data export-ignore
