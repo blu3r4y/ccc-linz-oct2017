@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\Account.cs" />
     <Compile Include="src\ContestUtil\ExtensionMethods\CollectionExtensions.cs" />
     <Compile Include="src\ContestUtil\ExtensionMethods\StringExtensions.cs" />
     <Compile Include="src\ContestUtil\Paths\PathFinder.cs" />
@@ -64,6 +65,8 @@
     <Compile Include="src\ContestUtil\Network\JsonRestConnection.cs" />
     <Compile Include="src\ContestUtil\Network\TcpConnection.cs" />
     <Compile Include="src\Program.cs" />
+    <Compile Include="src\Transaction.cs" />
+    <Compile Include="src\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
