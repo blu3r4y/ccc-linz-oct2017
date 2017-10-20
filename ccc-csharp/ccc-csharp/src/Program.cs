@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ccc_csharp
+namespace CCC
 {
-    internal class Program
+    internal static class Program
     {
         public static void Main(string[] args)
         {
