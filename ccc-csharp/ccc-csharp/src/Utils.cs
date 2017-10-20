@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace CCC
@@ -29,15 +30,18 @@ namespace CCC
 
             // read accounts
             var accounts = new List<Account>();
+            Console.WriteLine($"Reading {numAccounts} transactions ...");
             for (int j = i; j < i + numAccounts; j++)
             {
                 string line = totalLines[j];
                 string[] splitted = line.Split(' ');
 
                 string personName = splitted[0];
-                int actualAccountBalance = int.Parse(splitted[1]);
+                string accountNumber = splitted[1];
+                int actualAccountBalance = int.Parse(splitted[2]);
+                int overdraftLimit = int.Parse(splitted[3]);
 
-                accounts.Add(new Account(personName, actualAccountBalance));
+                accounts.Add(new Account(personName, accountNumber, actualAccountBalance, overdraftLimit));
             }
 
             i += numAccounts;
@@ -48,18 +52,19 @@ namespace CCC
 
             // read transactions
             var transactions = new List<Transaction>();
+            Console.WriteLine($"Reading {numTransactions} transactions ...");
             for (int j = i; j < i + numTransactions; j++)
             {
                 string line = totalLines[j];
                 string[] splitted = line.Split(' ');
 
-                string personNameFrom = splitted[0];
-                string personNameTo = splitted[1];
+                string accountNumberFrom = splitted[0];
+                string accountNumberTo = splitted[1];
                 int amount = int.Parse(splitted[2]);
                 long transactionSubmitTime = long.Parse(splitted[3]);
 
-                Account personNameFromAcc = accounts.Find(l => l.Name == personNameFrom);
-                Account personNameToAcc = accounts.Find(l => l.Name == personNameTo);
+                Account personNameFromAcc = accounts.Find(l => l.AccountNumber == accountNumberFrom);
+                Account personNameToAcc = accounts.Find(l => l.AccountNumber == accountNumberTo);
 
                 transactions.Add(new Transaction(personNameFromAcc, personNameToAcc,
                     amount, transactionSubmitTime));

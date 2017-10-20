@@ -10,15 +10,15 @@ namespace CCC
     internal static class Program
     {
         public static string DataPath = @"C:\data\Dropbox\Projekte\Code\CCC_Linz17_Fall\data\";
-        public static string LevelPath = Path.Combine(DataPath, @"level1\");
+        public static string LevelPath = Path.Combine(DataPath, @"level2\");
 
         public static void Main(string[] args)
         {
-            Console.WriteLine(doLevel1("level1-eg.txt"));
+            Console.WriteLine(doLevel1("level2-eg.txt"));
 
             for (int i = 1; i <= 4; i++)
             {
-                Console.WriteLine(doLevel1($"level1-{i}.txt"));
+                Console.WriteLine(doLevel1($"level2-{i}.txt"));
             }
 
             Console.Read();
@@ -37,13 +37,14 @@ namespace CCC
 
             foreach (Transaction transaction in transactions)
             {
-                transaction.Execute();
+                if (transaction.IsValid()) transaction.Execute();
             }
 
             output.AppendLine(accounts.Count.ToString());
-            foreach (Account account in accounts)
+            foreach (IGrouping<string, Account> account in accounts
+                .Where(a => a.Validate()).GroupBy(a => a.PersonName))
             {
-                output.AppendLine(string.Format("{0} {1}", account.Name, account.Balance));
+                output.AppendLine($"{account.Key} {account.Sum(a => a.Balance)}");
             }
 
             File.WriteAllText(Path.Combine(LevelPath, fileName + ".out.txt"), output.ToString());

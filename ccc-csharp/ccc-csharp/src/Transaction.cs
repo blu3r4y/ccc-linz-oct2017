@@ -18,11 +18,19 @@ namespace CCC
             TransactionSubmitTime = transactionSubmitTime;
         }
 
+        public bool IsValid()
+        {
+            if (!AccountFrom.Validate()) return false;
+            if (!AccountTo.Validate()) return false;
+            if (!AccountFrom.ValidateWithdraw(Amount)) return false;
+
+            return true;
+        }
+
         public void Execute()
         {
             AccountFrom.Balance -= Amount;
-            AccountTo.Balance += Amount;
-            
+            AccountTo.Balance += Amount;   
         }
     }
 }
