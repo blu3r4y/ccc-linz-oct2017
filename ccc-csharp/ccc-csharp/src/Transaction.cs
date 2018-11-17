@@ -27,10 +27,6 @@ namespace CCC
 
         public bool IsValid()
         {
-            if (Id == "0x00000095")
-            {
-                int x = 5;
-            }
             Console.WriteLine($"Checking #{this.Id} ...");
 
             // sum of input amounts == sum of output amounts

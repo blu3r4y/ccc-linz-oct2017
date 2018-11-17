@@ -66,6 +66,7 @@
     <Compile Include="src\ContestUtil\Network\JsonRestConnection.cs" />
     <Compile Include="src\ContestUtil\Network\TcpConnection.cs" />
     <Compile Include="src\Program.cs" />
+    <Compile Include="src\Request.cs" />
     <Compile Include="src\Transaction.cs" />
     <Compile Include="src\Utils.cs" />
   </ItemGroup>

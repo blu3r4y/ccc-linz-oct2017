@@ -11,10 +11,12 @@ namespace CCC
         public class Input
         {
             public List<Transaction> Transactions;
+            public List<Request> Requests;
 
-            public Input(List<Transaction> transactions)
+            public Input(List<Transaction> transactions, List<Request> requests)
             {
                 Transactions = transactions;
+                Requests = requests;
             }
         }
 
@@ -41,12 +43,6 @@ namespace CCC
                 int numInputs = int.Parse(splitted[1]);
                 int ii = 2;
 
-                if (transactionId == "0x00000095")
-                {
-                    int x = 6;
-                }
-
-
                 for (int jj = ii; jj < ii + numInputs * 3; jj = jj + 3)
                 {
                     string inputId = splitted[jj];
@@ -72,9 +68,30 @@ namespace CCC
 
                 transactions.Add(new Transaction(transactionId, transactionSubmitTime, inputElements, outputElements, line));
             }
+            i = i + numTransactions;
 
+            int numRequests = int.Parse(totalLines[i]);
+            i++;
+            
+            // read transactions
+            var requests = new List<Request>();
+            Console.WriteLine($"Reading {numRequests} transaction requests ...");
+            for (int j = i; j < i + numRequests; j++)
+            {
+                string line = totalLines[j];
+                string[] splitted = line.Split(' ');
+                
+                string transactionId = splitted[0];
+                string fromOwner = splitted[1];
+                string toOwner = splitted[2];
+                int amount = int.Parse(splitted[3]);
+                long timestamp = long.Parse(splitted[4]);
+                
+                requests.Add(new Request(transactionId, fromOwner, toOwner, amount, timestamp));
+            }
+            
             Blockchain.AllTransactions = transactions;
-            Singleton = new Input(transactions);
+            Singleton = new Input(transactions, requests);
             return Singleton;
         }
     }
